@@ -1,5 +1,5 @@
 CC = g++
-OBJS = src/main.cc
+OBJS = src/opengl.cc src/main.cc
 LINKER_FLAGS = -lGL -lGLU -lglut
 
 all: $(OBJS)
