@@ -21,9 +21,7 @@ bool init_opengl() {
   return true;
 }
 
-bool load_shader() {
-  std::string filename = "src/sh_vertex.glsl";
-  GLenum shader_type = GL_VERTEX_SHADER;
+bool load_shader(GLuint &shader, std::string filename, GLenum shader_type) {
 
   //Load source file
   std::ifstream f { filename };
@@ -41,7 +39,7 @@ bool load_shader() {
   const char *shader_source = file_contents.c_str();
 
   //Create and compile the shader
-  GLuint shader = glCreateShader(shader_type);
+  shader = glCreateShader(shader_type);
   glShaderSource(shader, 1, &shader_source, NULL);
   glCompileShader(shader);
 
@@ -54,6 +52,7 @@ bool load_shader() {
     glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &logSize);
     std::vector<GLchar> errorLog(logSize);
     glGetShaderInfoLog(shader, logSize, &logSize, &errorLog[0]);
+    std::cerr << "Failed to compile shader:" << std::endl;
     for (GLchar ch : errorLog) {
       std::cerr << ch;
     }
@@ -66,8 +65,33 @@ bool load_shader() {
   return true;
 }
 
-bool load_shaders() {
-  return load_shader();
+bool load_shaders(GLuint &program) {
+  GLuint vs, fs; //shader handles
+  bool vs_success, fs_success; //success flags
+
+  //Load the indvidual shaders
+  vs_success = load_shader(vs, "src/sh_vertex.glsl", GL_VERTEX_SHADER);
+  fs_success = load_shader(fs, "src/sh_fragment.glsl", GL_FRAGMENT_SHADER);
+
+  //Create a program, and link the shaders to it
+  program = glCreateProgram();
+  glAttachShader(program, vs);
+  glAttachShader(program, fs);
+  glLinkProgram(program);
+
+  //Free up shaders
+  glDeleteShader(vs);
+  glDeleteShader(fs);
+
+  //Check for errors
+  GLint success = 0;
+  glGetProgramiv(program, GL_LINK_STATUS, &success);
+  if (success == GL_FALSE) {
+    std::cerr << "Failed to link program" << std::endl;
+    return false;
+  }
+
+  return true;
 }
 
 void render() {

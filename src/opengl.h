@@ -8,7 +8,7 @@
 #include <vector>
 
 bool init_opengl();
-bool load_shaders();
+bool load_shaders(GLuint &program);
 void render();
 
 #endif //OPENGL_H

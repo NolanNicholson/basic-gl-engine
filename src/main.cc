@@ -40,8 +40,9 @@ int main(int argc, char* args[]) {
     std::cerr << "Failed to initialize OpenGL - terminating" << std::endl;
     return 1;
   }
-  if (!load_shaders()) {
-    std::cerr << "Failed to load shaders - terminating" << std::endl;
+  GLuint program;
+  if (!load_shaders(program)) {
+    std::cerr << "Failed to load/compile shaders - terminating" << std::endl;
     return 1;
   }
 
