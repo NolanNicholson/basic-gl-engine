@@ -14,7 +14,7 @@ static void key_callback( GLFWwindow* window,
 }
 
 int main(int argc, char* args[]) {
-  std::cout << "Hello" << std::endl;
+  std::cout << "Starting..." << std::endl;
 
   //Initialize GLFW
   if (!glfwInit()) {
@@ -46,12 +46,20 @@ int main(int argc, char* args[]) {
     return 1;
   }
 
+  GLuint VAO;
+  glCreateVertexArrays(1, &VAO);
+  glBindVertexArray(VAO);
+
+  std::cout << "Rendering..." << std::endl;
   while (!glfwWindowShouldClose(window)) {
-    render();
+    render(program);
     glfwSwapBuffers(window);
     glfwPollEvents();
   }
 
+  glDeleteVertexArrays(1, &VAO);
+  glDeleteProgram(program);
+  glDeleteVertexArrays(1, &VAO);
   glfwTerminate();
   return 0;
 }

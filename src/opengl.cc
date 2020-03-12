@@ -1,4 +1,5 @@
 #include "opengl.h"
+#include <cmath>
 
 bool init_opengl() {
   //Initialize clear color
@@ -94,15 +95,16 @@ bool load_shaders(GLuint &program) {
   return true;
 }
 
-void render() {
-  //Clear color buffer
-  glClear(GL_COLOR_BUFFER_BIT);
+void render(GLuint program) {
+  //Clear color buffer and use the program
+  float time = glfwGetTime();
+  GLfloat color[] = {
+    static_cast<float>(sin(time) * 0.4 + 0.5),
+    0.0f,
+    static_cast<float>(cos(time) * 0.4 + 0.5),
+    1.0f };
+  glClearBufferfv(GL_COLOR, 0, color);
+  glUseProgram(program);
 
-  //Render a quad
-  glBegin(GL_QUADS);
-    glVertex2f(-0.5f, -0.5f);
-    glVertex2f( 0.5f, -0.5f);
-    glVertex2f( 0.5f,  0.5f);
-    glVertex2f(-0.5f,  0.5f);
-  glEnd();
+  glDrawArrays(GL_TRIANGLES, 0, 3);
 }

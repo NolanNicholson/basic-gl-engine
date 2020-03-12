@@ -9,6 +9,6 @@
 
 bool init_opengl();
 bool load_shaders(GLuint &program);
-void render();
+void render(GLuint program);
 
 #endif //OPENGL_H
