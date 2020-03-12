@@ -1,16 +1,18 @@
 #include "opengl.h"
 
-unsigned const int k_screen_width = 640;
-unsigned const int k_screen_height = 480;
-unsigned const int k_screen_fps = 60;
-
-void run_main_loop(int val);
-
-static void key_callback( GLFWwindow* window,
+static void key_callback(GLFWwindow* window,
     int key, int scancode, int action, int mods) {
+  //GLFW key press callback function
   if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
     glfwSetWindowShouldClose(window, GLFW_TRUE);
   }
+}
+
+void framebuffer_size_callback(GLFWwindow* window,
+    int width, int height) {
+  //GLFW framebuffer resize callback function
+  std::cout << "Framebuffer resized: " << width << " " << height << std::endl;
+  glViewport(0, 0, width, height);
 }
 
 int main(int argc, char* args[]) {
@@ -34,6 +36,7 @@ int main(int argc, char* args[]) {
   glfwMakeContextCurrent(window);
   glfwSwapInterval(1); // wait for vsync
   glfwSetKeyCallback(window, key_callback);
+  glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
   //Initialize OpenGL and load shaders
   if (!init_opengl()) {
