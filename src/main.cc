@@ -49,10 +49,12 @@ int main(int argc, char* args[]) {
     return 1;
   }
 
+  //Set up a VAO (empty, but needs to be initialized for GL to draw anything?)
   GLuint VAO;
   glCreateVertexArrays(1, &VAO);
   glBindVertexArray(VAO);
 
+  //Main loop
   std::cout << "Rendering..." << std::endl;
   while (!glfwWindowShouldClose(window)) {
     render(program);
@@ -60,9 +62,9 @@ int main(int argc, char* args[]) {
     glfwPollEvents();
   }
 
+  //Wrap up
   glDeleteVertexArrays(1, &VAO);
   glDeleteProgram(program);
-  glDeleteVertexArrays(1, &VAO);
   glfwTerminate();
   return 0;
 }

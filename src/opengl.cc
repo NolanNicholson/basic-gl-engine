@@ -2,9 +2,6 @@
 #include <cmath>
 
 bool init_opengl() {
-  //Initialize clear color
-  glClearColor(0.1f, 0.1f, 0.1f, 1.f);
-
   //Check for errors
   GLenum error = glGetError();
   if (error != GL_NO_ERROR) {
@@ -23,7 +20,6 @@ bool init_opengl() {
 }
 
 bool load_shader(GLuint &shader, std::string filename, GLenum shader_type) {
-
   //Load source file
   std::ifstream f { filename };
   if (!f.is_open()) {
@@ -80,7 +76,7 @@ bool load_shaders(GLuint &program) {
   glAttachShader(program, fs);
   glLinkProgram(program);
 
-  //Free up shaders
+  //Free up shaders (now that they've been copied into the program)
   glDeleteShader(vs);
   glDeleteShader(fs);
 
@@ -96,15 +92,11 @@ bool load_shaders(GLuint &program) {
 }
 
 void render(GLuint program) {
-  //Clear color buffer and use the program
-  float time = glfwGetTime();
-  GLfloat color[] = {
-    static_cast<float>(sin(time) * 0.4 + 0.5),
-    0.0f,
-    static_cast<float>(cos(time) * 0.4 + 0.5),
-    1.0f };
+  //Clear the screen
+  static const GLfloat color[] = { 0.1f, 0.1f, 0.1f, 1.f };
   glClearBufferfv(GL_COLOR, 0, color);
-  glUseProgram(program);
 
-  glDrawArrays(GL_TRIANGLES, 0, 3);
+  //Set the program and draw
+  glUseProgram(program);
+  glDrawArrays(GL_TRIANGLES, 0, 6);
 }
