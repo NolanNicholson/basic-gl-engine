@@ -90,8 +90,7 @@ class App {
 
       //Set the program and draw
       glUseProgram(program);
-      //glBindVertexArray(VAO);
-      glDrawArrays(GL_POINTS, 0, 1);
+      glDrawArrays(GL_TRIANGLES, 0, 3);
 
       //Final GLFW buffer swap
       glfwSwapBuffers(window);
