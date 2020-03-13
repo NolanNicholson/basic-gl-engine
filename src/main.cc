@@ -76,11 +76,8 @@ class App {
       }
 
       //Set up VAO and VBO
-      glCreateVertexArrays(1, &VAO);
+      glGenVertexArrays(1, &VAO);
       glBindVertexArray(VAO);
-
-      glEnableVertexAttribArray(0);
-      glBindVertexArray(0);
 
       //Done!
       return true;
@@ -93,12 +90,8 @@ class App {
 
       //Set the program and draw
       glUseProgram(program);
-      glBindVertexArray(VAO);
-      glDrawArrays(GL_TRIANGLES, 0, 3);
-
-      //GL cleanup
-      glEnableVertexAttribArray(0);
-      glUseProgram(0);
+      //glBindVertexArray(VAO);
+      glDrawArrays(GL_POINTS, 0, 1);
 
       //Final GLFW buffer swap
       glfwSwapBuffers(window);
