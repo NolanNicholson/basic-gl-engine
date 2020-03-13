@@ -15,6 +15,23 @@ void framebuffer_size_callback(GLFWwindow* window,
   glViewport(0, 0, width, height);
 }
 
+void GLAPIENTRY
+MessageCallback(
+    GLenum source,
+    GLenum type,
+    GLuint id,
+    GLenum severity,
+    GLsizei length,
+    const GLchar* message,
+    const void* userParam) {
+  std::cerr
+    << "GL: "
+    << (type == GL_DEBUG_TYPE_ERROR ? "** ERROR **" : "")
+    << " Type: " << type
+    << " | Severity: " << severity
+    << " | Message: " << message << std::endl;
+}
+
 class App {
   public:
     GLFWwindow *window;
@@ -48,6 +65,10 @@ class App {
         std::cerr << "Failed to initialize OpenGL!" << std::endl;
         return false;
       }
+
+      //Enable debuf output
+      glEnable(GL_DEBUG_OUTPUT);
+      glDebugMessageCallback(MessageCallback, 0);
 
       if (!load_shaders(program)) {
         std::cerr << "Failed to load/compile shaders - terminating" << std::endl;
