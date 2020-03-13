@@ -90,13 +90,3 @@ bool load_shaders(GLuint &program) {
 
   return true;
 }
-
-void render(GLuint program) {
-  //Clear the screen
-  static const GLfloat color[] = { 0.1f, 0.1f, 0.1f, 1.f };
-  glClearBufferfv(GL_COLOR, 0, color);
-
-  //Set the program and draw
-  glUseProgram(program);
-  glDrawArrays(GL_TRIANGLES, 0, 6);
-}

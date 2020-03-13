@@ -18,8 +18,7 @@ void framebuffer_size_callback(GLFWwindow* window,
 class App {
   public:
     GLFWwindow *window;
-    GLuint program;
-    GLuint VAO;
+    GLuint program, VAO, VBO;
 
     bool initialize() {
       std::cout << "Starting..." << std::endl;
@@ -59,12 +58,41 @@ class App {
       glCreateVertexArrays(1, &VAO);
       glBindVertexArray(VAO);
 
+      glEnableVertexAttribArray(0);
+      glBindVertexArray(0);
+
       //Done!
       return true;
     }
 
+    void render() {
+      //Clear the screen
+      static const GLfloat color[] = { 0.1f, 0.1f, 0.1f, 1.f };
+      glClearBufferfv(GL_COLOR, 0, color);
+
+      //Set the program and draw
+      glUseProgram(program);
+      glBindVertexArray(VAO);
+      glDrawArrays(GL_TRIANGLES, 0, 3);
+
+      //GL cleanup
+      glEnableVertexAttribArray(0);
+      glUseProgram(0);
+
+      //Final GLFW buffer swap
+      glfwSwapBuffers(window);
+    }
+
+    void mainloop() {
+      while (!glfwWindowShouldClose(window)) {
+        render();
+        glfwPollEvents();
+      }
+    }
+
     void shutdown() {
       glDeleteVertexArrays(1, &VAO);
+      glDeleteBuffers(1, &VBO);
       glDeleteProgram(program);
       glfwTerminate();
     }
@@ -80,12 +108,8 @@ int main(int argc, char* args[]) {
   }
 
   //Main loop
-  std::cout << "Rendering..." << std::endl;
-  while (!glfwWindowShouldClose(a.window)) {
-    render(a.program);
-    glfwSwapBuffers(a.window);
-    glfwPollEvents();
-  }
+  std::cout << "Running..." << std::endl;
+  a.mainloop();
 
   //Wrap up
   a.shutdown();
