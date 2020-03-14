@@ -35,6 +35,11 @@ bool init_opengl() {
     std::cerr << "Error initializing GLEW" << std::endl;
     return false;
   }
+
+  //Enable debug output
+  glEnable(GL_DEBUG_OUTPUT);
+  glDebugMessageCallback(MessageCallback, 0);
+
   return true;
 }
 

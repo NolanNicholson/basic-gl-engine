@@ -50,18 +50,46 @@ class App {
         return false;
       }
 
-      //Enable debuf output
-      glEnable(GL_DEBUG_OUTPUT);
-      glDebugMessageCallback(MessageCallback, 0);
-
       if (!load_shaders(program)) {
         std::cerr << "Failed to load/compile shaders - terminating" << std::endl;
         return false;
       }
 
-      //Set up VAO and VBO
+      //Set up VAO
       glGenVertexArrays(1, &VAO);
       glBindVertexArray(VAO);
+
+      //Set up VBO
+      static const GLfloat vertices[] = {
+         0.0,  0.0,  0.5,  1.0,
+         0.4,  0.4,  0.5,  1.0,
+         0.0,  0.4,  0.5,  1.0,
+         0.0,  0.0,  0.5,  1.0,
+        -0.4, -0.4,  0.5,  1.0,
+         0.0, -0.4,  0.5,  1.0,
+      };
+      glCreateBuffers(1, &VBO);
+      glNamedBufferStorage(VBO,
+          sizeof(vertices),
+          vertices,
+          GL_MAP_WRITE_BIT);
+      glBindBuffer(GL_ARRAY_BUFFER, VBO);
+
+      //Set up the VAO to feed the vertex shader
+      glVertexArrayVertexBuffer(VAO,
+          0, //first vertex buffer binding
+          VBO,
+          0, // offset
+          4 * sizeof(GLfloat) // each vertex is one vec4
+          );
+      glVertexArrayAttribFormat(VAO,
+          0,
+          4, // number of components
+          GL_FLOAT,
+          GL_FALSE, // don't normalize
+          0 // first element
+          );
+      glEnableVertexArrayAttrib(VAO, 0);
 
       //Done!
       return true;
@@ -73,15 +101,15 @@ class App {
       glClearBufferfv(GL_COLOR, 0, color);
 
       //Pass in shader data
-      GLfloat attrib[] = {
+      GLfloat position[] = {
         0.5f * float(cos(time)),
         0.5f * float(sin(time)),
-        0.0f, 0.0f };
-      glVertexAttrib4fv(0, attrib);
+        0.0f, 0.0f, };
+      glVertexAttrib4fv(1, position);
 
       //Set the program and draw
       glUseProgram(program);
-      glDrawArrays(GL_TRIANGLES, 0, 3);
+      glDrawArrays(GL_TRIANGLES, 0, 6);
 
       //Final GLFW buffer swap
       glfwSwapBuffers(window);
