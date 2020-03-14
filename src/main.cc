@@ -16,51 +16,19 @@ void framebuffer_size_callback(GLFWwindow* window,
   glViewport(0, 0, width, height);
 }
 
-class App {
+class Object {
   public:
-    GLFWwindow *window;
-    GLuint program, VAO;
-    GLuint VBO[2]; // one for positions, one for colors
+    GLuint VAO;
+    GLuint VBO[2];
+    int vertex_count;
 
-    bool initialize() {
-      std::cout << "Starting..." << std::endl;
-
-      //Initialize GLFW
-      if (!glfwInit()) {
-        return false;
-      }
-
-      //Create a GLFW window running OpenGL 4.5
-      glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-      glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5);
-      window = glfwCreateWindow(640, 480, "Hello World", NULL, NULL);
-      if (!window) {
-        glfwTerminate();
-        return false;
-      }
-
-      //Set GLFW window context and other properties
-      glfwMakeContextCurrent(window);
-      glfwSwapInterval(1); // wait for vsync
-      glfwSetKeyCallback(window, key_callback);
-      glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
-
-      //Initialize OpenGL and load shaders
-      if (!init_opengl()) {
-        std::cerr << "Failed to initialize OpenGL!" << std::endl;
-        return false;
-      }
-
-      if (!load_shaders(program)) {
-        std::cerr << "Failed to load/compile shaders - terminating" << std::endl;
-        return false;
-      }
-
+    void initialize() {
       //Set up VAO
       glGenVertexArrays(1, &VAO);
       glBindVertexArray(VAO);
 
       //Position and color data
+      vertex_count = 6;
       static const GLfloat positions[] = {
          0.0,  0.0,  0.5,  1.0,
          0.4,  0.4,  0.5,  1.0,
@@ -107,6 +75,62 @@ class App {
       glVertexArrayAttribFormat(VAO, 1, 4, GL_FLOAT, GL_FALSE, 0);
       glEnableVertexArrayAttrib(VAO, 1);
 
+    }
+
+    void render(float time) {
+      glDrawArrays(GL_TRIANGLES, 0, vertex_count);
+    }
+
+    void cleanup() {
+      glDeleteVertexArrays(1, &VAO);
+      glDeleteBuffers(1, &VBO[0]);
+      glDeleteBuffers(1, &VBO[1]);
+    }
+};
+
+class App {
+  public:
+    GLFWwindow *window;
+    GLuint program;
+    Object o;
+
+    bool initialize() {
+      std::cout << "Starting..." << std::endl;
+
+      //Initialize GLFW
+      if (!glfwInit()) {
+        return false;
+      }
+
+      //Create a GLFW window running OpenGL 4.5
+      glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+      glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5);
+      window = glfwCreateWindow(640, 480, "Hello World", NULL, NULL);
+      if (!window) {
+        glfwTerminate();
+        return false;
+      }
+
+      //Set GLFW window context and other properties
+      glfwMakeContextCurrent(window);
+      glfwSwapInterval(1); // wait for vsync
+      glfwSetKeyCallback(window, key_callback);
+      glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+
+      //Initialize OpenGL and load shaders
+      if (!init_opengl()) {
+        std::cerr << "Failed to initialize OpenGL!" << std::endl;
+        return false;
+      }
+
+      if (!load_shaders(program)) {
+        std::cerr << "Failed to load/compile shaders - terminating" << std::endl;
+        return false;
+      }
+
+      //Initialize a test object
+      o.initialize();
+
       //Done!
       return true;
     }
@@ -115,6 +139,7 @@ class App {
       //Clear the screen
       static const GLfloat color[] = { 0.1f, 0.1f, 0.1f, 1.f };
       glClearBufferfv(GL_COLOR, 0, color);
+
 
       //Pass in shader data
       GLfloat position[] = {
@@ -125,7 +150,8 @@ class App {
 
       //Set the program and draw
       glUseProgram(program);
-      glDrawArrays(GL_TRIANGLES, 0, 6);
+
+      o.render(time);
 
       //Final GLFW buffer swap
       glfwSwapBuffers(window);
@@ -139,9 +165,7 @@ class App {
     }
 
     void shutdown() {
-      glDeleteVertexArrays(1, &VAO);
-      glDeleteBuffers(1, &VBO[0]);
-      glDeleteBuffers(1, &VBO[1]);
+      o.cleanup();
       glDeleteProgram(program);
       glfwTerminate();
     }
