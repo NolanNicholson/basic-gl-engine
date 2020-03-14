@@ -1,5 +1,6 @@
 #include "opengl.h"
 #include "object.h"
+#include "sierpinski.h"
 #include <cmath>
 
 static void key_callback(GLFWwindow* window,
@@ -20,7 +21,7 @@ void framebuffer_size_callback(GLFWwindow* window,
 
 class TwoTriangles : public Object {
   public:
-    virtual void load_resources() {
+    void load_resources() {
       //Position and color data
       vertex_count = 6;
 
@@ -51,9 +52,12 @@ class App {
   public:
     GLFWwindow *window;
     GLuint program;
-    TwoTriangles o;
+    Sierpinski o;
 
     bool initialize() {
+      std::cout << "Enter a number between 0 and 7: ";
+      std::cin >> o.level;
+
       std::cout << "Starting..." << std::endl;
 
       //Initialize GLFW
@@ -102,8 +106,8 @@ class App {
 
       //Pass in shader data
       GLfloat position[] = {
-        0.5f * float(cos(time)),
-        0.5f * float(sin(time)),
+        0.1f * float(cos(time)),
+        0.1f * float(sin(time)),
         0.0f, 0.0f, };
       glVertexAttrib4fv(2, position);
 

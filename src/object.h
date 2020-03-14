@@ -1,3 +1,6 @@
+#ifndef OBJECT_H
+#define OBJECT_H
+
 class Object {
   public:
     GLuint VAO;
@@ -63,3 +66,5 @@ class Object {
       delete [] colors;
     }
 };
+
+#endif // OBJECT_H
