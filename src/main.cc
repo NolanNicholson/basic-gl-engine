@@ -1,4 +1,5 @@
 #include "opengl.h"
+#include <cmath>
 
 static void key_callback(GLFWwindow* window,
     int key, int scancode, int action, int mods) {
@@ -83,10 +84,17 @@ class App {
       return true;
     }
 
-    void render() {
+    void render(float time) {
       //Clear the screen
       static const GLfloat color[] = { 0.1f, 0.1f, 0.1f, 1.f };
       glClearBufferfv(GL_COLOR, 0, color);
+
+      //Pass in shader data
+      GLfloat attrib[] = {
+        0.5f * float(cos(time)),
+        0.5f * float(sin(time)),
+        0.0f, 0.0f };
+      glVertexAttrib4fv(0, attrib);
 
       //Set the program and draw
       glUseProgram(program);
@@ -98,7 +106,7 @@ class App {
 
     void mainloop() {
       while (!glfwWindowShouldClose(window)) {
-        render();
+        render(glfwGetTime());
         glfwPollEvents();
       }
     }
