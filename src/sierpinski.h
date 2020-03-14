@@ -5,7 +5,7 @@
 
 class Sierpinski : public Object {
   public:
-    int level = 4;
+    int level = 6;
     int pos_index;
     float radius = 0.8;
 
