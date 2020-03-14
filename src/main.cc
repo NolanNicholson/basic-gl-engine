@@ -19,7 +19,8 @@ void framebuffer_size_callback(GLFWwindow* window,
 class App {
   public:
     GLFWwindow *window;
-    GLuint program, VAO, VBO;
+    GLuint program, VAO;
+    GLuint VBO[2]; // one for positions, one for colors
 
     bool initialize() {
       std::cout << "Starting..." << std::endl;
@@ -59,8 +60,8 @@ class App {
       glGenVertexArrays(1, &VAO);
       glBindVertexArray(VAO);
 
-      //Set up VBO
-      static const GLfloat vertices[] = {
+      //Position and color data
+      static const GLfloat positions[] = {
          0.0,  0.0,  0.5,  1.0,
          0.4,  0.4,  0.5,  1.0,
          0.0,  0.4,  0.5,  1.0,
@@ -68,17 +69,26 @@ class App {
         -0.4, -0.4,  0.5,  1.0,
          0.0, -0.4,  0.5,  1.0,
       };
-      glCreateBuffers(1, &VBO);
-      glNamedBufferStorage(VBO,
-          sizeof(vertices),
-          vertices,
-          GL_MAP_WRITE_BIT);
-      glBindBuffer(GL_ARRAY_BUFFER, VBO);
+      static const GLfloat yellow[] = { 1.0, 0.7, 0.3, 1.0 };
+      static const GLfloat red[]    = { 1.0, 0.3, 0.3, 1.0 };
+      static const GLfloat colors[] = {
+        yellow[0], yellow[1], yellow[2], yellow[3],
+        yellow[0], yellow[1], yellow[2], yellow[3],
+        yellow[0], yellow[1], yellow[2], yellow[3],
+        red[0], red[1], red[2], red[3],
+        red[0], red[1], red[2], red[3],
+        red[0], red[1], red[2], red[3],
+      };
 
-      //Set up the VAO to feed the vertex shader
+      //Set up VBOs
+      glCreateBuffers(2, &VBO[0]);
+
+      //VBO 0: Positions
+      glNamedBufferStorage(VBO[0], sizeof(positions), positions, 0);
+      //Set up the VAO and VBO to feed the vertex shader
       glVertexArrayVertexBuffer(VAO,
           0, //first vertex buffer binding
-          VBO,
+          VBO[0],
           0, // offset
           4 * sizeof(GLfloat) // each vertex is one vec4
           );
@@ -90,6 +100,12 @@ class App {
           0 // first element
           );
       glEnableVertexArrayAttrib(VAO, 0);
+
+      //VBO 1: Colors
+      glNamedBufferStorage(VBO[1], sizeof(colors), colors, 0);
+      glVertexArrayVertexBuffer(VAO, 1, VBO[1], 0, 4 * sizeof(GLfloat));
+      glVertexArrayAttribFormat(VAO, 1, 4, GL_FLOAT, GL_FALSE, 0);
+      glEnableVertexArrayAttrib(VAO, 1);
 
       //Done!
       return true;
@@ -105,7 +121,7 @@ class App {
         0.5f * float(cos(time)),
         0.5f * float(sin(time)),
         0.0f, 0.0f, };
-      glVertexAttrib4fv(1, position);
+      glVertexAttrib4fv(2, position);
 
       //Set the program and draw
       glUseProgram(program);
@@ -124,7 +140,8 @@ class App {
 
     void shutdown() {
       glDeleteVertexArrays(1, &VAO);
-      glDeleteBuffers(1, &VBO);
+      glDeleteBuffers(1, &VBO[0]);
+      glDeleteBuffers(1, &VBO[1]);
       glDeleteProgram(program);
       glfwTerminate();
     }
