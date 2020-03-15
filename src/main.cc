@@ -78,17 +78,23 @@ class App {
       static const GLfloat color[] = { 0.1f, 0.1f, 0.1f, 1.f };
       glClearBufferfv(GL_COLOR, 0, color);
 
-      //Pass in shader data
+      //Set the shader program
+      glUseProgram(program);
+
+      //Set the position offset
       GLfloat position[] = {
         0.1f * float(cos(time)),
         0.1f * float(sin(time)),
         0.0f, 0.0f, };
       glVertexAttrib4fv(2, position);
 
-      //Set the program and draw
-      glUseProgram(program);
-
       cf.render(time);
+
+      //Mix up the position offset
+      position[0] = -0.1f * float(cos(-time));
+      position[1] = 0.1f * float(sin(-time));
+      glVertexAttrib4fv(2, position);
+
       st.render(time);
 
       //Clean up

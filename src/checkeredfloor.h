@@ -5,7 +5,7 @@
 
 class CheckeredFloor : public Object {
   private:
-    float tilesize = 0.05;
+    float tilesize = 0.1;
     int tiles_wide = 12;
     int tiles_tall = 12;
   public:
@@ -17,9 +17,13 @@ class CheckeredFloor : public Object {
 
       vertex_count = 3 * 2 * tiles_wide * tiles_tall;
 
+      float x_offset = tilesize * tiles_wide / 2;
+      float y_offset = tilesize * tiles_tall / 2;
+
       positions = new GLfloat[vertex_count * 4];
-      static const GLfloat lightgray[] = { 0.7, 0.7, 0.7, 1.0 };
-      static const GLfloat darkgray[]  = { 0.5, 0.5, 0.5, 1.0 };
+      static const GLfloat lightgray[]  = { 0.7, 0.7, 0.7, 1.0 };
+      static const GLfloat darkgray[]   = { 0.5, 0.5, 0.5, 1.0 };
+      static const GLfloat darkergray[] = { 0.3, 0.3, 0.3, 1.0 };
       const GLfloat *this_color;
       bool alternating = false;
 
@@ -27,39 +31,39 @@ class CheckeredFloor : public Object {
       int i = 0; // index within positions
       for (int t_x = 0; t_x < tiles_wide; t_x++) {
         for (int t_y = 0; t_y < tiles_tall; t_y++) {
-          positions[i+ 0] = (t_x + 0) * tilesize;
-          positions[i+ 1] = (t_y + 0) * tilesize;
+          positions[i+ 0] = (t_x + 0) * tilesize - x_offset;
+          positions[i+ 1] = (t_y + 0) * tilesize - y_offset;
           positions[i+ 2] = 0.5;
           positions[i+ 3] = 1.0;
 
-          positions[i+ 4] = (t_x + 1) * tilesize;
-          positions[i+ 5] = (t_y + 0) * tilesize;
+          positions[i+ 4] = (t_x + 1) * tilesize - x_offset;
+          positions[i+ 5] = (t_y + 0) * tilesize - y_offset;
           positions[i+ 6] = 0.5;
           positions[i+ 7] = 1.0;
 
-          positions[i+ 8] = (t_x + 0) * tilesize;
-          positions[i+ 9] = (t_y + 1) * tilesize;
+          positions[i+ 8] = (t_x + 0) * tilesize - x_offset;
+          positions[i+ 9] = (t_y + 1) * tilesize - y_offset;
           positions[i+10] = 0.5;
           positions[i+11] = 1.0;
 
-          positions[i+12] = (t_x + 1) * tilesize;
-          positions[i+13] = (t_y + 0) * tilesize;
+          positions[i+12] = (t_x + 1) * tilesize - x_offset;
+          positions[i+13] = (t_y + 0) * tilesize - y_offset;
           positions[i+14] = 0.5;
           positions[i+15] = 1.0;
 
-          positions[i+16] = (t_x + 0) * tilesize;
-          positions[i+17] = (t_y + 1) * tilesize;
+          positions[i+16] = (t_x + 0) * tilesize - x_offset;
+          positions[i+17] = (t_y + 1) * tilesize - y_offset;
           positions[i+18] = 0.5;
           positions[i+19] = 1.0;
 
-          positions[i+20] = (t_x + 1) * tilesize;
-          positions[i+21] = (t_y + 1) * tilesize;
+          positions[i+20] = (t_x + 1) * tilesize - x_offset;
+          positions[i+21] = (t_y + 1) * tilesize - y_offset;
           positions[i+22] = 0.5;
           positions[i+23] = 1.0;
 
           //colors: alternate between light gray and dark gray
           alternating = ((t_x & 1) ^ (t_y & 1));
-          this_color = (alternating ? &lightgray[0] : &darkgray[0]);
+          this_color = (alternating ? &darkergray[0] : &darkgray[0]);
 
           for (int j = 0; j < 24; j++) {
             colors[i+j] = this_color[j % 4];
