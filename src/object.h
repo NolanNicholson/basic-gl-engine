@@ -1,6 +1,8 @@
 #ifndef OBJECT_H
 #define OBJECT_H
 
+int num_objects = 0;
+
 class Object {
   public:
     GLuint VAO;
@@ -44,6 +46,9 @@ class Object {
       glVertexArrayVertexBuffer(VAO, 1, VBO[1], 0, 4 * sizeof(GLfloat));
       glVertexArrayAttribFormat(VAO, 1, 4, GL_FLOAT, GL_FALSE, 0);
       glEnableVertexArrayAttrib(VAO, 1);
+
+      //Unbind the VAO
+      glBindVertexArray(0);
     }
 
     void initialize() {
@@ -52,6 +57,7 @@ class Object {
     }
 
     void render(float time) {
+      glBindVertexArray(VAO);
       glDrawArrays(GL_TRIANGLES, 0, vertex_count);
     }
 

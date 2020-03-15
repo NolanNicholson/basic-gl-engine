@@ -6,7 +6,7 @@
 class Sierpinski : public Object {
   public:
     int level = 6;
-    int pos_index;
+    int pos_index = 0;
     float radius = 0.8;
 
     void sierpinski_recursive(

@@ -28,6 +28,7 @@ class App {
     GLFWwindow *window;
     GLuint program;
     CheckeredFloor cf;
+    Sierpinski st;
 
     bool initialize() {
 
@@ -65,6 +66,7 @@ class App {
       }
 
       //Initialize a test object
+      st.initialize();
       cf.initialize();
 
       //Done!
@@ -75,7 +77,6 @@ class App {
       //Clear the screen
       static const GLfloat color[] = { 0.1f, 0.1f, 0.1f, 1.f };
       glClearBufferfv(GL_COLOR, 0, color);
-
 
       //Pass in shader data
       GLfloat position[] = {
@@ -88,6 +89,11 @@ class App {
       glUseProgram(program);
 
       cf.render(time);
+      st.render(time);
+
+      //Clean up
+      glBindVertexArray(0);
+      glUseProgram(0);
 
       //Final GLFW buffer swap
       glfwSwapBuffers(window);
@@ -102,6 +108,7 @@ class App {
 
     void shutdown() {
       cf.cleanup();
+      st.cleanup();
       glDeleteProgram(program);
       glfwTerminate();
     }
