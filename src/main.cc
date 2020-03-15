@@ -70,6 +70,19 @@ class App {
       st.initialize();
       cf.initialize();
 
+      //Test vector math
+      /*
+      vec3 testvec_a, testvec_b;
+      testvec_a.A[0] = 2;
+      testvec_a.A[2] = 2;
+      testvec_b.A[1] = 1;
+      testvec_a.print();
+      testvec_b.print();
+      vec3 testvec_c = vec3::minus(testvec_a, testvec_b);
+      testvec_c.print();
+      std::cout << testvec_a.magnitude() << std::endl;
+      */
+
       //Done!
       return true;
     }
@@ -85,7 +98,12 @@ class App {
       //Transformation matrix stack
       mat4 model, view, projection;
       model.set_identity();
-      view.set_identity();
+
+      vec3 camera(0.0, 0.0, 0.0);
+      vec3 target(0.0, 0.0, -0.1);
+      vec3     up(0.0, 1.0, 0.0);
+      view = mat4::lookat(camera, target, up);
+      //view.print();
       projection.set_identity();
 
       glUniformMatrix4fv(10, 1, GL_FALSE, model.A);
