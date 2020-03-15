@@ -90,8 +90,13 @@ class App {
       vec3 target(0.0, 0.0, 0.0);
       vec3     up(0.0, 1.0, 0.0);
       view = mat4::lookat(camera, target, up);
-      projection = mat4::frustum(
-          -1.0, 1.0, -1.0, 1.0, 1.0, 0.0);
+
+      //Projection matrix is based on the window's
+      //(technically the framebuffer's) aspect ratio
+      int width, height;
+      glfwGetFramebufferSize(window, &width, &height);
+      float aspect = float(width) / float(height);
+      projection = mat4::perspective(aspect, 1.0, 1.0, 0.0);
 
       glUniformMatrix4fv(10, 1, GL_FALSE, model.A);
       glUniformMatrix4fv(11, 1, GL_FALSE, view.A);

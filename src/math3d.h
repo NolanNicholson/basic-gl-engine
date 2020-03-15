@@ -147,6 +147,18 @@ struct mat4 {
     return mat4(result);
   }
 
+  static mat4 perspective(
+      float aspect, float fov,
+      float near, float far
+      ) {
+    float top = tan(fov / 2) * near;
+    float bottom = -top;
+    float right = aspect * top;
+    float left = -right;
+
+    return frustum(left, right, bottom, top, near, far);
+  }
+
   void print() {
     for (int r = 0; r < 4; r++) {
       std::cout << (r == 0 ? "mat4: ( " : "        ");
