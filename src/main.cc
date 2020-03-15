@@ -1,5 +1,6 @@
 #include "opengl.h"
 #include "object.h"
+#include "math3d.h"
 
 #include "sierpinski.h"
 #include "twotriangles.h"
@@ -82,13 +83,9 @@ class App {
       glUseProgram(program);
 
       //Set the MVP matrix
-      const GLfloat mvp[16] = {
-        1.0, 0.0, 0.0, 0.0,
-        0.0, 1.0, 0.0, 0.0,
-        0.0, 0.0, 1.0, 0.0,
-        0.0, 0.0, 0.0, 1.0
-      };
-      glUniformMatrix4fv(10, 1, GL_FALSE, mvp);
+      mat4 mvp;
+      mvp.set_identity();
+      glUniformMatrix4fv(10, 1, GL_FALSE, mvp.A);
 
       //Set the position offset
       GLfloat position[] = {
