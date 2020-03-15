@@ -81,6 +81,15 @@ class App {
       //Set the shader program
       glUseProgram(program);
 
+      //Set the MVP matrix
+      const GLfloat mvp[16] = {
+        1.0, 0.0, 0.0, 0.0,
+        0.0, 1.0, 0.0, 0.0,
+        0.0, 0.0, 1.0, 0.0,
+        0.0, 0.0, 0.0, 1.0
+      };
+      glUniformMatrix4fv(10, 1, GL_FALSE, mvp);
+
       //Set the position offset
       GLfloat position[] = {
         0.1f * float(cos(time)),
