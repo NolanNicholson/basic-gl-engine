@@ -86,13 +86,12 @@ class App {
       mat4 model, view, projection;
       model.set_identity();
 
-      vec3 camera(0.0, 0.6, 0.0);
-      vec3 target(0.0, 1.0, 0.0);
-      vec3     up(0.0, 0.0, 1.0);
+      vec3 camera(0.0, 0.0, 1.0);
+      vec3 target(0.0, 0.0, 0.0);
+      vec3     up(0.0, 1.0, 0.0);
       view = mat4::lookat(camera, target, up);
       projection = mat4::frustum(
           -1.0, 1.0, -1.0, 1.0, 1.0, 0.0);
-      //projection.print();
 
       glUniformMatrix4fv(10, 1, GL_FALSE, model.A);
       glUniformMatrix4fv(11, 1, GL_FALSE, view.A);
@@ -101,18 +100,12 @@ class App {
       //Set the position offset
       GLfloat position[] = {
         0.1f * float(cos(time)),
-        0.1f * float(sin(time)),
+        0.1f * float(sin(time)) - 0.1f,
         0.0f, 0.0f, };
       glVertexAttrib4fv(2, position);
 
-      cf.render(time);
-
-      //Mix up the position offset
-      position[0] = -0.1f * float(cos(-time));
-      position[1] = 0.1f * float(sin(-time));
-      glVertexAttrib4fv(2, position);
-
       st.render(time);
+      cf.render(time);
 
       //Clean up
       glBindVertexArray(0);

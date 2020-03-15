@@ -6,19 +6,20 @@
 class CheckeredFloor : public Object {
   private:
     float tilesize = 0.1;
-    int tiles_wide = 12;
-    int tiles_tall = 12;
+    int tiles_x = 12;
+    int tiles_z = 12;
+    int floor_y = 0;
   public:
     void load_resources() {
       //Position and color data
       //Vertex count: 3 vertices per triangle,
       //2 tris per quad,
-      //tiles_wide * tiles_tall quads in the floor
+      //tiles_x * tiles_z quads in the floor
 
-      vertex_count = 3 * 2 * tiles_wide * tiles_tall;
+      vertex_count = 3 * 2 * tiles_x * tiles_z;
 
-      float x_offset = tilesize * tiles_wide / 2;
-      float y_offset = tilesize * tiles_tall / 2;
+      float x_offset = tilesize * tiles_x / 2;
+      float y_offset = tilesize * tiles_z / 2;
 
       positions = new GLfloat[vertex_count * 4];
       static const GLfloat lightgray[]  = { 0.7, 0.7, 0.7, 1.0 };
@@ -29,36 +30,36 @@ class CheckeredFloor : public Object {
 
       colors = new GLfloat[vertex_count * 4];
       int i = 0; // index within positions
-      for (int t_x = 0; t_x < tiles_wide; t_x++) {
-        for (int t_y = 0; t_y < tiles_tall; t_y++) {
+      for (int t_x = 0; t_x < tiles_x; t_x++) {
+        for (int t_y = 0; t_y < tiles_z; t_y++) {
           positions[i+ 0] = (t_x + 0) * tilesize - x_offset;
-          positions[i+ 1] = (t_y + 0) * tilesize - y_offset;
-          positions[i+ 2] = 0.5;
+          positions[i+ 1] = floor_y;
+          positions[i+ 2] = (t_y + 0) * tilesize - y_offset;
           positions[i+ 3] = 1.0;
 
           positions[i+ 4] = (t_x + 1) * tilesize - x_offset;
-          positions[i+ 5] = (t_y + 0) * tilesize - y_offset;
-          positions[i+ 6] = 0.5;
+          positions[i+ 5] = floor_y;
+          positions[i+ 6] = (t_y + 0) * tilesize - y_offset;
           positions[i+ 7] = 1.0;
 
           positions[i+ 8] = (t_x + 0) * tilesize - x_offset;
-          positions[i+ 9] = (t_y + 1) * tilesize - y_offset;
-          positions[i+10] = 0.5;
+          positions[i+ 9] = floor_y;
+          positions[i+10] = (t_y + 1) * tilesize - y_offset;
           positions[i+11] = 1.0;
 
           positions[i+12] = (t_x + 1) * tilesize - x_offset;
-          positions[i+13] = (t_y + 0) * tilesize - y_offset;
-          positions[i+14] = 0.5;
+          positions[i+13] = floor_y;
+          positions[i+14] = (t_y + 0) * tilesize - y_offset;
           positions[i+15] = 1.0;
 
           positions[i+16] = (t_x + 0) * tilesize - x_offset;
-          positions[i+17] = (t_y + 1) * tilesize - y_offset;
-          positions[i+18] = 0.5;
+          positions[i+17] = floor_y;
+          positions[i+18] = (t_y + 1) * tilesize - y_offset;
           positions[i+19] = 1.0;
 
           positions[i+20] = (t_x + 1) * tilesize - x_offset;
-          positions[i+21] = (t_y + 1) * tilesize - y_offset;
-          positions[i+22] = 0.5;
+          positions[i+21] = floor_y;
+          positions[i+22] = (t_y + 1) * tilesize - y_offset;
           positions[i+23] = 1.0;
 
           //colors: alternate between light gray and dark gray
