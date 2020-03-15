@@ -3,6 +3,7 @@
 
 #include "sierpinski.h"
 #include "twotriangles.h"
+#include "checkeredfloor.h"
 
 #include <cmath>
 
@@ -26,13 +27,9 @@ class App {
   public:
     GLFWwindow *window;
     GLuint program;
-    Sierpinski o;
+    CheckeredFloor cf;
 
     bool initialize() {
-      /*
-      std::cout << "Enter a number between 0 and 7: ";
-      std::cin >> o.level;
-      */
 
       std::cout << "Starting..." << std::endl;
 
@@ -68,7 +65,7 @@ class App {
       }
 
       //Initialize a test object
-      o.initialize();
+      cf.initialize();
 
       //Done!
       return true;
@@ -90,7 +87,7 @@ class App {
       //Set the program and draw
       glUseProgram(program);
 
-      o.render(time);
+      cf.render(time);
 
       //Final GLFW buffer swap
       glfwSwapBuffers(window);
@@ -104,7 +101,7 @@ class App {
     }
 
     void shutdown() {
-      o.cleanup();
+      cf.cleanup();
       glDeleteProgram(program);
       glfwTerminate();
     }
