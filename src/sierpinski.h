@@ -5,9 +5,10 @@
 
 class Sierpinski : public Object {
   public:
-    int level = 6;
+    int level = 5;
     int pos_index = 0;
     float radius = 0.8;
+    float z = 0.5;
 
     void sierpinski_recursive(
         int sublevel,
@@ -18,11 +19,11 @@ class Sierpinski : public Object {
         //in this case, just add the triangle
         GLfloat triangle[12] = {
           c_x, c_y + r,
-            0.5, 1.0,
+            z, 1.0,
           c_x - r, c_y - r,
-            0.5, 1.0,
+            z, 1.0,
           c_x + r, c_y - r,
-            0.5, 1.0,
+            z, 1.0,
         };
         for (int i = 0; i < 12; i++) {
           positions[pos_index + i] = triangle[i];

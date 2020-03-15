@@ -10,6 +10,6 @@ layout (location = 12) uniform mat4 projection;
 out vec4 v_color;
 
 void main(void) {
-    gl_Position = (position * model * view * projection) + adjust;
+    gl_Position = (projection * view * model * (position + adjust));
     v_color = color;
 }
