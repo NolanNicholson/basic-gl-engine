@@ -82,10 +82,15 @@ class App {
       //Set the shader program
       glUseProgram(program);
 
-      //Set the MVP matrix
-      mat4 mvp;
-      mvp.set_identity();
-      glUniformMatrix4fv(10, 1, GL_FALSE, mvp.A);
+      //Transformation matrix stack
+      mat4 model, view, projection;
+      model.set_identity();
+      view.set_identity();
+      projection.set_identity();
+
+      glUniformMatrix4fv(10, 1, GL_FALSE, model.A);
+      glUniformMatrix4fv(11, 1, GL_FALSE, view.A);
+      glUniformMatrix4fv(12, 1, GL_FALSE, projection.A);
 
       //Set the position offset
       GLfloat position[] = {
